@@ -1,0 +1,20 @@
+ATPG using PODEM and Deductive fault simulation
+===============================================
+
+EE709 Course project - Meet Udeshi, 14D070007
+
+## Build and Install
+
+To build, run
+
+```
+$ make atpg
+```
+
+To run test,
+
+```
+$ make atpg-test
+```
+
+Output can be seen on stdout and is stored in `output.log` and `debug.log`

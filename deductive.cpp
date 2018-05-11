@@ -18,6 +18,7 @@ int main (int argc, char* argv[]) {
     string filename(argv[1]);
     int nodes, gates;
 
+    // Initialise circuit
     Node* nodelist = (Node*) malloc(sizeof(Node) * 100);
     Gate* gatelist = (Gate*) malloc(sizeof(Gate) * 30);
     vector<int> inputs;
@@ -25,6 +26,7 @@ int main (int argc, char* argv[]) {
     vector<int> outputs;
         outputs.reserve(30);
 
+    // Parse the circuit file
     parse(filename.c_str(), nodelist, gatelist, &nodes, &gates, &inputs, &outputs);
 
     char inputstr[30];
@@ -34,10 +36,11 @@ int main (int argc, char* argv[]) {
 
     for(int i=0; i<nodes*2; i++) allfaults[i] = false;
 
-    while (faultcount > 0) {
+    while (faultcount > 0) { // continue till all faults covered
         cin >> inputstr;
         cout << "Testing with input: " << inputstr << endl;
 
+        // Run true value simulation and deductive simulation for the given input
         simulate(gatelist, nodelist, &inputs, &outputs, inputstr, gates, nodes);
 
         // Output faults

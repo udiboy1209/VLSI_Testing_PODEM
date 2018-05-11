@@ -2,6 +2,6 @@
 #include "gates.h"
 #include "simulation.h"
 
-Value backtrace(Node* node, Value val, Node** pi); 
+void setlevels(Gate* gatelist, int gates);
 
 bool podemRec(Circuit& circuit); 

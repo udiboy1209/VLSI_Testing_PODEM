@@ -16,10 +16,10 @@ HEADERS= setutil.h\
 all: atpg
 
 atpg: $(OBJS) build/atpg.o $(HEADERS)
-	$(CC) -o build/atpg $(OBJS) build/atpg.o -lfl
+	$(CC) -o atpg $(OBJS) build/atpg.o -lfl
 
 deductive: $(OBJS) build/deductive.o $(HEADERS)
-	$(CC) -o build/deductive $(OBJS) build/deductive.o -lfl
+	$(CC) -o deductive $(OBJS) build/deductive.o -lfl
 
 build/%.tab.o: build/%.tab.c
 	$(CC) -c $< -o $@ -I.
@@ -36,8 +36,10 @@ build/%.yy.c: %.l
 build/%.o: %.cpp
 	$(CC) $(CFLAGS) $(INCLUDES) -o $@ -c $< 
 
-test:
-	build/deductive fulladder.txt 100
+deductive-test: deductive
+	./deductive fulladder.txt
+atpg-test: atpg
+	./atpg fulladder.txt 2> debug.log | tee output.log
 
 clean:
-	rm -vf build/*
+	rm -vf build/* *.log atpg deductive
