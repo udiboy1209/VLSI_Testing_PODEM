@@ -4,12 +4,14 @@ INCLUDES=
 OBJS= build/setutil.o\
       build/gates.o \
       build/simulation.o\
+      build/podem.o\
       build/parser.tab.o \
       build/parser.yy.o
 
 HEADERS= setutil.h\
 	 gates.h\
-	 simulation.h
+	 simulation.h\
+	 podem.h
 
 all: atpg
 

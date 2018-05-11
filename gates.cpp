@@ -1,5 +1,16 @@
 #include "gates.h"
 #include "setutil.h"
+ 
+ostream& operator<<(ostream& out, const Value val) {
+    switch(val) {
+        case ONE: return out << "1";
+        case ZERO: return out << "0";
+        case XVAL: return out << "X";
+        case DVAL: return out << "D";
+        case DBAR: return out << "DB";
+        default: return out << "unset";
+    }
+}
 
 void Gate::setOutput(Node* node) {
     output=node;
@@ -8,7 +19,6 @@ void Gate::setOutput(Node* node) {
 
 void Gate::addInput(Node* node) {
     inputs.push_back(node);
-    node->out = this;
 }
 
 void AndGate::compute() {
@@ -22,6 +32,13 @@ void AndGate::compute() {
     for(Node* node : inputs) {
         if(node->value == ZERO) {
             val = ZERO;
+            break;
+        }
+        if(node->value == XVAL) {
+            val = XVAL;
+        }
+        if((node->value == DVAL || node->value == DBAR) && val != XVAL) {
+            val = node->value;
         }
     }
 
@@ -68,6 +85,13 @@ void OrGate::compute() {
     for(Node* node : inputs) {
         if(node->value == ONE) {
             val = ONE;
+            break;
+        }
+        if(node->value == XVAL) {
+            val = XVAL;
+        }
+        if((node->value == DVAL || node->value == DBAR) && val != XVAL) {
+            val = node->value;
         }
     }
 
@@ -113,8 +137,14 @@ void NotGate::compute() {
     Node* input = inputs.at(0);
     if(input->value == ZERO) {
         output->value = ONE;
-    } else {
+    } else if(input->value == ONE) {
         output->value = ZERO;
+    } else if(input->value == DVAL) {
+        output->value = DBAR;
+    } else if(input->value == DBAR) {
+        output->value = DVAL;
+    } else {
+        output->value = XVAL;
     }
 }
 
@@ -156,11 +186,19 @@ void XorGate::compute() {
 
     Value val = ZERO;
     for(Node* input : inputs) {
+        if(input->value == XVAL) {
+            val = XVAL;
+            break;
+        }
         if((input->value == ONE && val == ZERO) ||
-                (input->value == ZERO && val == ONE)) {
+           (input->value == ZERO && val == ONE) ||
+           (input->value == DVAL && val == DBAR) ||
+           (input->value == DBAR && val == DVAL)) {
             val = ONE;
-        } else {
+        } else if(val == input->value) {
             val = ZERO;
+        } else if(input->value == ONE) {
+            val = val == DVAL ? DBAR : DVAL;
         }
     }
     output->value = val;

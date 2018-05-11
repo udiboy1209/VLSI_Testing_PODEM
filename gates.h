@@ -13,27 +13,44 @@ enum Value: unsigned char {
     ZERO = '0',
     XVAL = 'X',
     DVAL = 'D',
-    DBVAL = 'd'
+    DBAR = 'd'
 };
 
+ostream& operator<<(ostream& out, const Value val);
+
 class Gate;
+class Node;
+
+struct Circuit {
+    Node* nodelist;
+    int nodes;
+    Gate* gatelist;
+    int gates;
+    vector<int> inputs;
+    vector<int> outputs;
+    vector<Gate*> dfront;
+
+    Node* fault;
+    Value faultval;
+};
 
 class Node {
 public:
     char type;
     Value value;
     int index;
+    int level;
     unordered_set<int> faultset;
     Gate* in;
-    Gate* out;
 
     Node(char type, int index): type(type), 
-                                index(index), 
-                                value(ZERO),
-                                in(NULL), out(NULL) {}
+                                index(index),
+                                level(0),
+                                value(XVAL),
+                                in(NULL) {}
 
     friend ostream & operator << (ostream& out, const Node& node) {
-        out << "Node(" << node.type << "-" << node.index << " = " << node.value - 48 << ")";
+        out << "Node(" << node.type << "-" << node.index << " = " << node.value << ")";
     }
 };
 

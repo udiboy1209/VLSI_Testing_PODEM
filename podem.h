@@ -1,4 +1,7 @@
 #include <iostream>
 #include "gates.h"
+#include "simulation.h"
 
-int backtrace(Gate* gate, Value val); 
+Value backtrace(Node* node, Value val, Node** pi); 
+
+bool podemRec(Circuit& circuit); 
